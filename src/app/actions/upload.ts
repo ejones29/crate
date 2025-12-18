@@ -1,5 +1,7 @@
 "use server";
 
+import { authClient } from "@/lib/auth/client";
+
 // Server action to handle uploads (stub)
 // TODO: Replace placeholder logic with real Cloudinary (or other) upload
 
@@ -11,6 +13,13 @@ export type UploadedFile = {
 };
 
 export async function uploadFile(formData: FormData): Promise<UploadedFile> {
+  const { data: session } = await authClient.getSession();
+  const user = session?.user;
+  
+  if (!user) {
+    throw new Error("User must be signed in to upload a file");
+  }
+
   // Basic validation constants
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const ALLOWED = ["image/jpeg", "image/png", "image/gif", "image/webp"];
