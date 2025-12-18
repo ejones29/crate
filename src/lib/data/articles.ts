@@ -15,7 +15,7 @@ export function getArticles() {
       title: "Markdown Guide",
       content: `# Markdown Basics\n\nThis guide covers the basics of Markdown formatting used throughout the app.\n\n## Examples\n- **Bold**\n- *Italic*\n- [Links](https://example.com)\n\n\n
 tl;dr: write plain text and use Markdown.`,
-      author: "John Doe",
+      author: "Admin User",
       createdAt: "2025-12-17T14:30:00Z",
     },
     {
