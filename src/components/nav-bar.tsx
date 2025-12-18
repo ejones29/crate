@@ -1,5 +1,6 @@
 import { UserButton } from "@stackframe/stack";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -7,6 +8,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { stackServerApp } from "@/stack/server";
+import LogoIcon from "../app/assets/logo.png"
 
 export async function NavBar() {
   const user = await stackServerApp.getUser();
@@ -17,8 +19,9 @@ export async function NavBar() {
         <div className="w-full flex items-center gap-2">
           <Link
             href="/"
-            className="text-lg font-bold tracking-tight text-gray-900"
+            className="text-lg font-bold tracking-tight text-gray-900 flex items-center"
           >
+            <Image src={LogoIcon} alt="Crate Logo" className="inline-block mr-2 h-5 w-5" width={24} height={24} />
             Crate
           </Link>
           <NavigationMenu className="flex w-full ml-auto">

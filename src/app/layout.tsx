@@ -4,7 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { stackClientApp } from "../stack/client";
 import "./globals.css";
 import { NavBar } from "@/components/nav-bar";
-import Favicon from "../app/favicon.png";
+import Favicon from "../app/assets/icon.png";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
