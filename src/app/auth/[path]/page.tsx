@@ -2,7 +2,6 @@
 // /auth/sign-in - Sign in with email/password and social providers
 // /auth/sign-up - New account registration
 // /auth/sign-out - Sign the user out of the application
-import "../../neon.css";
 import { AuthView } from "@neondatabase/neon-js/auth/react/ui";
 
 export const dynamicParams = false;

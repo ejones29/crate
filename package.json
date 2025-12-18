@@ -1,6 +1,6 @@
 {
   "name": "crate",
-  "description": "A personal knowledge system focused on curation and revision",
+  "description": "A wiki-style personal knowledge system focused on curation and revision",
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -1,8 +1,6 @@
 // Dynamic route segment for account pages
 // /account/settings - User can manage their profile details
 // /account/security - Change password and list active session
-
-import "../../neon.css";
 import { AccountView } from "@neondatabase/neon-js/auth/react/ui";
 import { accountViewPaths } from "@neondatabase/neon-js/auth/react/ui/server";
 
