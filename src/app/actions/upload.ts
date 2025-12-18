@@ -1,6 +1,6 @@
 "use server";
 
-import { authClient } from "@/lib/auth/client";
+import { neonAuth } from "@neondatabase/neon-js/auth/next";
 
 // Server action to handle uploads (stub)
 // TODO: Replace placeholder logic with real Cloudinary (or other) upload
@@ -13,9 +13,7 @@ export type UploadedFile = {
 };
 
 export async function uploadFile(formData: FormData): Promise<UploadedFile> {
-  const { data: session } = await authClient.getSession();
-  const user = session?.user;
-  
+  const { user } = await neonAuth();
   if (!user) {
     throw new Error("User must be signed in to upload a file");
   }

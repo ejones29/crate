@@ -6,7 +6,6 @@ import {
 
 import WikiEditor from "@/components/wiki-editor";
 
-
 interface EditArticlePageProps {
   params: Promise<{
     id: string;
@@ -18,7 +17,6 @@ export default async function EditArticlePage({
 }: EditArticlePageProps) {
   const { id } = await params;
 
-  
   // For now, we'll just show some mock data if it's not "new"
   const mockData =
     id !== "new"
@@ -44,18 +42,17 @@ This would normally be fetched from your API.`,
 
   return (
     <>
-    <SignedIn>
-      <WikiEditor
-        initialTitle={mockData.title}
-        initialContent={mockData.content}
-        isEditing={true}
-        articleId={id}
-      />
-      
-    </SignedIn>
-  <SignedOut>
-      <RedirectToSignIn />
-    </SignedOut>
+      <SignedIn>
+        <WikiEditor
+          initialTitle={mockData.title}
+          initialContent={mockData.content}
+          isEditing={true}
+          articleId={id}
+        />
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
     </>
   );
 }

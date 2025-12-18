@@ -1,7 +1,7 @@
 "use server";
 
+import { neonAuth } from "@neondatabase/neon-js/auth/next";
 import { redirect } from "next/navigation";
-import { authClient } from "@/lib/auth/client";
 
 export type CreateArticleInput = {
   title: string;
@@ -17,8 +17,7 @@ export type UpdateArticleInput = {
 };
 
 export async function createArticle(data: CreateArticleInput) {
-  const { data: session } = await authClient.getSession();
-  const user = session?.user;
+  const { user } = await neonAuth();
 
   if (!user) {
     throw new Error("User must be signed in to create an article");
@@ -29,8 +28,7 @@ export async function createArticle(data: CreateArticleInput) {
 }
 
 export async function updateArticle(id: string, data: UpdateArticleInput) {
-  const { data: session } = await authClient.getSession();
-  const user = session?.user;
+  const { user } = await neonAuth();
 
   if (!user) {
     throw new Error("User must be signed in to update an article");
@@ -42,8 +40,7 @@ export async function updateArticle(id: string, data: UpdateArticleInput) {
 }
 
 export async function deleteArticle(id: string) {
-  const { data: session } = await authClient.getSession();
-  const user = session?.user;
+  const { user } = await neonAuth();
 
   if (!user) {
     throw new Error("User must be signed in to delete an article");
