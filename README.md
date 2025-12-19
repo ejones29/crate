@@ -21,11 +21,11 @@ Crate is built to support that workflow.
 
 ## Core Concepts
 
-- **Entries**  
+- **Articles**  
   Individual pieces of knowledge — technical notes, ideas, lessons, or references.
 
 - **Revisions**  
-  Entries are immutable over time. Each edit creates a new revision, preserving history and authorship.
+  Articles are immutable over time. Each edit creates a new revision, preserving history and authorship.
 
 - **Tags**  
   Lightweight organization for browsing and discovery.
@@ -60,6 +60,7 @@ Crate is built to support that workflow.
 - **Neon** (Postgres)
 - **Stack Auth**
 - **Drizzle ORM**
+- **Vercel Blob** Blob/Object Storage
 
 ### Other
 - Markdown rendering
@@ -70,7 +71,7 @@ Crate is built to support that workflow.
 
 ## Data Model (High Level)
 
-- `entries`  
+- `articles`  
   Represents the canonical identity of a page.
 
 - `revisions`  
