@@ -40,49 +40,54 @@ export default async function Home({
             <PaginationContent>
               {pagination.hasPreviousPage && (
                 <PaginationItem>
-                  <PaginationPrevious href={`?page=${pagination.currentPage - 1}`} />
+                  <PaginationPrevious
+                    href={`?page=${pagination.currentPage - 1}`}
+                  />
                 </PaginationItem>
               )}
 
-              {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-                (pageNum) => {
-                  // Show first page, last page, current page, and pages around current
-                  const showPage =
-                    pageNum === 1 ||
-                    pageNum === pagination.totalPages ||
-                    Math.abs(pageNum - pagination.currentPage) <= 1;
+              {Array.from(
+                { length: pagination.totalPages },
+                (_, i) => i + 1,
+              ).map((pageNum) => {
+                // Show first page, last page, current page, and pages around current
+                const showPage =
+                  pageNum === 1 ||
+                  pageNum === pagination.totalPages ||
+                  Math.abs(pageNum - pagination.currentPage) <= 1;
 
-                  if (!showPage) {
-                    // Show ellipsis for gaps
-                    if (
-                      pageNum === pagination.currentPage - 2 ||
-                      pageNum === pagination.currentPage + 2
-                    ) {
-                      return (
-                        <PaginationItem key={pageNum}>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      );
-                    }
-                    return null;
+                if (!showPage) {
+                  // Show ellipsis for gaps
+                  if (
+                    pageNum === pagination.currentPage - 2 ||
+                    pageNum === pagination.currentPage + 2
+                  ) {
+                    return (
+                      <PaginationItem key={pageNum}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
                   }
-
-                  return (
-                    <PaginationItem key={pageNum}>
-                      <PaginationLink
-                        href={`?page=${pageNum}`}
-                        isActive={pageNum === pagination.currentPage}
-                      >
-                        {pageNum}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
+                  return null;
                 }
-              )}
+
+                return (
+                  <PaginationItem key={pageNum}>
+                    <PaginationLink
+                      href={`?page=${pageNum}`}
+                      isActive={pageNum === pagination.currentPage}
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
 
               {pagination.hasNextPage && (
                 <PaginationItem>
-                  <PaginationNext href={`?page=${pagination.currentPage + 1}`} />
+                  <PaginationNext
+                    href={`?page=${pagination.currentPage + 1}`}
+                  />
                 </PaginationItem>
               )}
             </PaginationContent>

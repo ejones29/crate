@@ -27,8 +27,6 @@ export default function WikiArticleViewer({
   article,
   canEdit = false,
 }: WikiArticleViewerProps) {
-  // ...existing code...
-
   // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

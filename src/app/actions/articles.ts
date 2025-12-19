@@ -8,9 +8,7 @@ import { articles } from "@/db/schema";
 import { ensureUserExists } from "@/db/sync-user";
 import { stackServerApp } from "@/stack/server";
 
-// Server actions for articles (stubs)
-// TODO: Replace with real database operations when ready
-
+// Server actions for articles (create, update, delete)
 export type CreateArticleInput = {
   title: string;
   content: string;
@@ -23,6 +21,15 @@ export type UpdateArticleInput = {
   content?: string;
   imageUrl?: string;
 };
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // Remove non-word chars (except spaces and hyphens)
+    .replace(/[\s_-]+/g, "-") // Replace spaces, underscores, multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+}
 
 export async function createArticle(data: CreateArticleInput) {
   const user = await stackServerApp.getUser();
@@ -39,7 +46,7 @@ export async function createArticle(data: CreateArticleInput) {
     .values({
       title: data.title,
       content: data.content,
-      slug: `${Date.now()}`,
+      slug: slugify(data.title),
       published: true,
       authorId: user.id,
     })
@@ -61,7 +68,7 @@ export async function updateArticle(id: string, data: UpdateArticleInput) {
 
   console.log("📝 updateArticle called:", { id, ...data });
 
-  const _response = await db
+  await db
     .update(articles)
     .set({
       title: data.title,
@@ -84,9 +91,9 @@ export async function deleteArticle(id: string) {
 
   console.log("🗑️ deleteArticle called:", id);
 
-  const _response = await db.delete(articles).where(eq(articles.id, +id));
+  await db.delete(articles).where(eq(articles.id, +id));
 
-  return { success: true, message: `Article ${id} delete logged (stub)` };
+  return { success: true, message: `Article ${id} delete logged` };
 }
 
 // Form-friendly server action: accepts FormData from a client form and calls deleteArticle

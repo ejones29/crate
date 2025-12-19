@@ -2,7 +2,6 @@ import "dotenv/config";
 import assert from "node:assert";
 import { defineConfig } from "drizzle-kit";
 
-
 assert(process.env.DATABASE_URL, "DATABASE_URL must be defined");
 
 export default defineConfig({
