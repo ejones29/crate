@@ -1,10 +1,7 @@
-import {
-  RedirectToSignIn,
-  SignedIn,
-  SignedOut,
-} from "@neondatabase/neon-js/auth/react/ui";
-
+import { notFound } from "next/navigation";
 import WikiEditor from "@/components/wiki-editor";
+import { getArticleById } from "@/lib/data/articles";
+import { stackServerApp } from "@/stack/server";
 
 interface EditArticlePageProps {
   params: Promise<{
@@ -16,43 +13,28 @@ export default async function EditArticlePage({
   params,
 }: EditArticlePageProps) {
   const { id } = await params;
+  const _user = await stackServerApp.getUser({ or: "redirect" });
+
+  // we'll uncomment this later when the articles have real IDs
+  // if (user.id !== id) {
+  //   stackServerApp.redirectToHome();
+  // }
 
   // For now, we'll just show some mock data if it's not "new"
-  const mockData =
-    id !== "new"
-      ? {
-          title: `Sample Article ${id}`,
-          content: `# Sample Article ${id}
+  if (id === "new") {
+    return <WikiEditor isEditing={true} articleId={id} />;
+  }
 
-This is some sample markdown content for article ${id}.
-
-## Features
-- **Bold text**
-- *Italic text*
-- [Links](https://example.com)
-
-## Code Example
-\`\`\`javascript
-console.log("Hello from article ${id}");
-\`\`\`
-
-This would normally be fetched from your API.`,
-        }
-      : {};
-
+  const article = await getArticleById(+id);
+  if (!article) {
+    notFound();
+  }
   return (
-    <>
-      <SignedIn>
-        <WikiEditor
-          initialTitle={mockData.title}
-          initialContent={mockData.content}
-          isEditing={true}
-          articleId={id}
-        />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
+    <WikiEditor
+      initialTitle={article.title}
+      initialContent={article.content}
+      isEditing={true}
+      articleId={id}
+    />
   );
 }

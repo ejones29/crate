@@ -1,21 +1,7 @@
-"use client";
-
-import {
-  RedirectToSignIn,
-  SignedIn,
-  SignedOut,
-} from "@neondatabase/neon-js/auth/react/ui";
 import WikiEditor from "@/components/wiki-editor";
+import { stackServerApp } from "@/stack/server";
 
-export default function NewArticlePage() {
-  return (
-    <>
-      <SignedIn>
-        <WikiEditor isEditing={false} />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
-  );
+export default async function NewArticlePage() {
+  await stackServerApp.getUser({ or: "redirect" });
+  return <WikiEditor isEditing={false} />;
 }

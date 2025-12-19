@@ -1,6 +1,6 @@
 "use server";
 
-import { neonAuth } from "@neondatabase/neon-js/auth/next";
+import { stackServerApp } from "@/stack/server";
 
 // Server action to handle uploads (stub)
 // TODO: Replace placeholder logic with real Cloudinary (or other) upload
@@ -13,9 +13,9 @@ export type UploadedFile = {
 };
 
 export async function uploadFile(formData: FormData): Promise<UploadedFile> {
-  const { user } = await neonAuth();
+  const user = stackServerApp.getUser();
   if (!user) {
-    throw new Error("User must be signed in to upload a file");
+    throw new Error("❌ Unauthorized");
   }
 
   // Basic validation constants

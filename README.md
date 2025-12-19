@@ -58,7 +58,7 @@ Crate is built to support that workflow.
 
 ### Backend
 - **Neon** (Postgres)
-- **Neon Auth**
+- **Stack Auth**
 - **Drizzle ORM**
 
 ### Other

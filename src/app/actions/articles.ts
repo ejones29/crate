@@ -1,7 +1,15 @@
 "use server";
 
-import { neonAuth } from "@neondatabase/neon-js/auth/next";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { authorizeUserToEditArticle } from "@/db/authz";
+import db from "@/db/index";
+import { articles } from "@/db/schema";
+import { ensureUserExists } from "@/db/sync-user";
+import { stackServerApp } from "@/stack/server";
+
+// Server actions for articles (stubs)
+// TODO: Replace with real database operations when ready
 
 export type CreateArticleInput = {
   title: string;
@@ -17,38 +25,67 @@ export type UpdateArticleInput = {
 };
 
 export async function createArticle(data: CreateArticleInput) {
-  const { user } = await neonAuth();
-
+  const user = await stackServerApp.getUser();
   if (!user) {
-    throw new Error("User must be signed in to create an article");
+    throw new Error("❌ Unauthorized");
   }
-  // TODO: Replace with actual database call
+
+  await ensureUserExists(user);
+
   console.log("✨ createArticle called:", data);
-  return { success: true, message: "Article create logged (stub)" };
+
+  const response = await db
+    .insert(articles)
+    .values({
+      title: data.title,
+      content: data.content,
+      slug: `${Date.now()}`,
+      published: true,
+      authorId: user.id,
+    })
+    .returning({ id: articles.id });
+
+  const articleId = response[0]?.id;
+  return { success: true, message: "Article create logged", id: articleId };
 }
 
 export async function updateArticle(id: string, data: UpdateArticleInput) {
-  const { user } = await neonAuth();
-
+  const user = await stackServerApp.getUser();
   if (!user) {
-    throw new Error("User must be signed in to update an article");
+    throw new Error("❌ Unauthorized");
   }
-  const authorId = user.id;
-  // TODO: Replace with actual database update
-  console.log("📝 updateArticle called:", authorId, { id, ...data });
-  return { success: true, message: `Article ${id} update logged (stub)` };
+
+  if (!(await authorizeUserToEditArticle(user.id, +id))) {
+    throw new Error("❌ Forbidden");
+  }
+
+  console.log("📝 updateArticle called:", { id, ...data });
+
+  const _response = await db
+    .update(articles)
+    .set({
+      title: data.title,
+      content: data.content,
+    })
+    .where(eq(articles.id, +id));
+
+  return { success: true, message: `Article ${id} update logged` };
 }
 
 export async function deleteArticle(id: string) {
-  const { user } = await neonAuth();
-
+  const user = await stackServerApp.getUser();
   if (!user) {
-    throw new Error("User must be signed in to delete an article");
+    throw new Error("❌ Unauthorized");
   }
-  const authorId = user.id;
 
-  // TODO: Replace with actual database delete
-  console.log("🗑️ deleteArticle called:", authorId, id);
+  if (!(await authorizeUserToEditArticle(user.id, +id))) {
+    throw new Error("❌ Forbidden");
+  }
+
+  console.log("🗑️ deleteArticle called:", id);
+
+  const _response = await db.delete(articles).where(eq(articles.id, +id));
+
   return { success: true, message: `Article ${id} delete logged (stub)` };
 }
 
