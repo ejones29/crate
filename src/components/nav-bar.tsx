@@ -1,6 +1,6 @@
 import { UserButton } from "@stackframe/stack";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -8,7 +8,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { stackServerApp } from "@/stack/server";
-import LogoIcon from "../app/assets/logo.png"
+import LogoIcon from "../app/assets/logo.png";
 
 export async function NavBar() {
   const user = await stackServerApp.getUser();
@@ -21,36 +21,42 @@ export async function NavBar() {
             href="/"
             className="text-lg font-bold tracking-tight text-gray-900 flex items-center"
           >
-            <Image src={LogoIcon} alt="Crate Logo" className="inline-block mr-2 h-5 w-5" width={24} height={24} />
+            <Image
+              src={LogoIcon}
+              alt="Crate Logo"
+              className="inline-block mr-2 h-5 w-5"
+              width={24}
+              height={24}
+            />
             Crate
           </Link>
           <NavigationMenu className="flex w-full ml-auto">
             <NavigationMenuList className="flex items-center gap-2">
               {user ? (
-              <>
-                <NavigationMenuItem>
-                  <Button asChild variant="outline">
-                    <Link href="/wiki/edit/new">New Article</Link>
-                  </Button>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <UserButton />
-                </NavigationMenuItem>
-              </>
-            ) : (
-              <>
-                <NavigationMenuItem>
-                  <Button asChild variant="outline">
-                    <Link href="/handler/sign-in">Sign In</Link>
-                  </Button>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Button asChild>
-                    <Link href="/handler/sign-up">Sign Up</Link>
-                  </Button>
-                </NavigationMenuItem>
-              </>
-            )}
+                <>
+                  <NavigationMenuItem>
+                    <Button asChild variant="outline">
+                      <Link href="/wiki/edit/new">New Article</Link>
+                    </Button>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <UserButton />
+                  </NavigationMenuItem>
+                </>
+              ) : (
+                <>
+                  <NavigationMenuItem>
+                    <Button asChild variant="outline">
+                      <Link href="/handler/sign-in">Sign In</Link>
+                    </Button>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Button asChild>
+                      <Link href="/handler/sign-up">Sign Up</Link>
+                    </Button>
+                  </NavigationMenuItem>
+                </>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
