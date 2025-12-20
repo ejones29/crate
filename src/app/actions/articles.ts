@@ -2,12 +2,12 @@
 
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import redis from "@/cache/index";
 import { authorizeUserToEditArticle } from "@/db/authz";
 import db from "@/db/index";
 import { articles } from "@/db/schema";
 import { ensureUserExists } from "@/db/sync-user";
 import { stackServerApp } from "@/stack/server";
-
 // Server actions for articles (create, update, delete)
 export type CreateArticleInput = {
   title: string;
@@ -52,8 +52,9 @@ export async function createArticle(data: CreateArticleInput) {
       imageUrl: data.imageUrl ?? undefined,
     })
     .returning({ id: articles.id });
-
+  
   const articleId = response[0]?.id;
+  redis.del("articles:all"); // Invalidate articles list cache
   return { success: true, message: "Article create logged", id: articleId };
 }
 

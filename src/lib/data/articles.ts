@@ -1,11 +1,20 @@
 // helper function to pull data from db and return articles
-// todo: pagination, filtering, etc.
+
 
 import { count, desc, eq } from "drizzle-orm";
+import redis from "@/cache/index";
 import db from "@/db/index";
 import { articles, usersSync } from "@/db/schema";
 
 export async function getArticles(page = 1, pageSize = 10) {
+  const cacheKey = `articles:page=${page}:size=${pageSize}`;
+  const cached = await redis.get(cacheKey);
+  if (cached) {
+    console.log("🔵 Cache Hit -> Returning articles from cache");
+    return cached;
+  }
+  console.log("🟠 Cache Miss -> Fetching articles from DB");
+
   const offset = (page - 1) * pageSize;
 
   const [articlesList, totalCount] = await Promise.all([
@@ -30,7 +39,7 @@ export async function getArticles(page = 1, pageSize = 10) {
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  return {
+  const result = {
     articles: articlesList,
     pagination: {
       currentPage: page,
@@ -41,6 +50,11 @@ export async function getArticles(page = 1, pageSize = 10) {
       hasPreviousPage: page > 1,
     },
   };
+
+  // Cache the result for 1 minute (60 seconds)
+  await redis.set(cacheKey, result, { ex: 60 });
+
+  return result;
 }
 
 export async function getArticleById(id: number) {
