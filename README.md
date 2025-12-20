@@ -60,7 +60,8 @@ Crate is built to support that workflow.
 - **Neon** (Postgres)
 - **Stack Auth**
 - **Drizzle ORM**
-- **Vercel Blob** Blob/Object Storage
+- **Vercel Blob** (Blob/Object Storage)
+- **Upstash** (Redis - Key-Value Store)
 
 ### Other
 - Markdown rendering
