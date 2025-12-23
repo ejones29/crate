@@ -77,7 +77,7 @@ export async function updateArticle(id: string, data: UpdateArticleInput) {
       content: data.content,
       imageUrl: data.imageUrl ?? undefined,
     })
-    .where(eq(articles.id, +id));
+    .where(eq(articles.id, Number.parseFloat(id)));
 
   return { success: true, message: `Article ${id} update logged` };
 }
@@ -88,13 +88,13 @@ export async function deleteArticle(id: string) {
     throw new Error("❌ Unauthorized");
   }
 
-  if (!(await authorizeUserToEditArticle(user.id, +id))) {
+  if (!(await authorizeUserToEditArticle(user.id, Number.parseFloat(id)))) {
     throw new Error("❌ Forbidden");
   }
 
   console.log("🗑️ deleteArticle called:", id);
 
-  await db.delete(articles).where(eq(articles.id, +id));
+  await db.delete(articles).where(eq(articles.id, Number.parseFloat(id)));
 
   return { success: true, message: `Article ${id} delete logged` };
 }
