@@ -2,12 +2,14 @@
 
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import summarizeArticle from "@/ai/summarize";
 import redis from "@/cache/index";
 import { authorizeUserToEditArticle } from "@/db/authz";
 import db from "@/db/index";
 import { articles } from "@/db/schema";
 import { ensureUserExists } from "@/db/sync-user";
 import { stackServerApp } from "@/stack/server";
+
 // Server actions for articles (create, update, delete)
 export type CreateArticleInput = {
   title: string;
@@ -40,7 +42,8 @@ export async function createArticle(data: CreateArticleInput) {
   await ensureUserExists(user);
 
   console.log("✨ createArticle called:", data);
-
+  const summary = await summarizeArticle(data.title || "", data.content || "");
+  console.log("🧠 Article summary generated:", summary);
   const response = await db
     .insert(articles)
     .values({
@@ -50,9 +53,10 @@ export async function createArticle(data: CreateArticleInput) {
       published: true,
       authorId: user.id,
       imageUrl: data.imageUrl ?? undefined,
+      summary: summary,
     })
     .returning({ id: articles.id });
-  
+
   const articleId = response[0]?.id;
   redis.del("articles:all"); // Invalidate articles list cache
   return { success: true, message: "Article create logged", id: articleId };
@@ -69,13 +73,15 @@ export async function updateArticle(id: string, data: UpdateArticleInput) {
   }
 
   console.log("📝 updateArticle called:", { id, ...data });
-
+  const summary = await summarizeArticle(data.title || "", data.content || "");
+  console.log("🧠 Article summary generated:", summary);
   await db
     .update(articles)
     .set({
       title: data.title,
       content: data.content,
       imageUrl: data.imageUrl ?? undefined,
+      summary: summary ?? undefined,
     })
     .where(eq(articles.id, Number.parseFloat(id)));
 

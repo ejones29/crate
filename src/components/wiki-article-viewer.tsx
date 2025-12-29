@@ -1,6 +1,14 @@
 "use client";
 
-import { Calendar, ChevronRight, Edit, Eye, Home, Trash, User } from "lucide-react";
+import {
+  Calendar,
+  ChevronRight,
+  Edit,
+  Eye,
+  Home,
+  Trash,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -49,7 +57,7 @@ export default function WikiArticleViewer({
     }
     fetchPageview();
   }, [article.id]);
-  
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Breadcrumb Navigation */}

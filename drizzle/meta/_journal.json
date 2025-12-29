@@ -8,6 +8,13 @@
       "when": 1766166483003,
       "tag": "0000_chilly_zarda",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1767036961180,
+      "tag": "0001_tired_the_hunter",
+      "breakpoints": true
     }
   ]
 }
