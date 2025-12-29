@@ -18,17 +18,28 @@ export default async function Home({
   const { page: pageParam } = await searchParams;
   const currentPage = Number(pageParam) || 1;
   const result = await getArticles(currentPage, 10);
-  const { articles, pagination } = result;
+  const { articles, pagination } = Array.isArray(result)
+    ? {
+        articles: result,
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalCount: result.length,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+      }
+    : result;
 
   return (
     <div>
       <main className="max-w-2xl mx-auto mt-10 flex flex-col gap-6">
-        {articles.map(({ title, id, createdAt, content, author }) => (
+        {articles.map(({ title, id, createdAt, summary, author }) => (
           <WikiCard
             title={title}
             author={author ? author : "Unknown"}
             date={createdAt}
-            summary={content.substring(0, 200)} // temporary
+            summary={summary ?? ""}
             href={`/wiki/${id}`}
             key={id}
           />

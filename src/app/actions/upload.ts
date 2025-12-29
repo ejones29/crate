@@ -61,5 +61,4 @@ export async function uploadFile(formData: FormData): Promise<UploadedFile> {
     console.error("❌ Vercel Blob upload error:", err);
     throw new Error("Upload failed");
   }
-
 }

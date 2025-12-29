@@ -1,14 +1,22 @@
 // helper function to pull data from db and return articles
-
-
 import { count, desc, eq } from "drizzle-orm";
 import redis from "@/cache/index";
 import db from "@/db/index";
 import { articles, usersSync } from "@/db/schema";
 
+export type ArticleList = {
+  id: number;
+  title: string;
+  createdAt: string;
+  content: string;
+  author: string | null;
+  imageUrl?: string | null;
+  summary?: string | null;
+};
+
 export async function getArticles(page = 1, pageSize = 10) {
   const cacheKey = `articles:page=${page}:size=${pageSize}`;
-  const cached = await redis.get(cacheKey);
+  const cached = await redis.get<ArticleList[]>(cacheKey);
   if (cached) {
     console.log("🔵 Cache Hit -> Returning articles from cache");
     return cached;
@@ -25,6 +33,7 @@ export async function getArticles(page = 1, pageSize = 10) {
         createdAt: articles.createdAt,
         content: articles.content,
         author: usersSync.name,
+        summary: articles.summary,
       })
       .from(articles)
       .leftJoin(usersSync, eq(articles.authorId, usersSync.id))
@@ -57,6 +66,16 @@ export async function getArticles(page = 1, pageSize = 10) {
   return result;
 }
 
+export type ArticleWithAuthor = {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  imageUrl?: string | null;
+  author: string | null;
+  summary?: string | null;
+};
+
 export async function getArticleById(id: number) {
   const response = await db
     .select({
@@ -66,9 +85,10 @@ export async function getArticleById(id: number) {
       content: articles.content,
       author: usersSync.name,
       imageUrl: articles.imageUrl,
+      summary: articles.summary,
     })
     .from(articles)
     .where(eq(articles.id, id))
     .leftJoin(usersSync, eq(articles.authorId, usersSync.id));
-  return response[0] ? response[0] : null;
+  return response[0] ? (response[0] as unknown as ArticleWithAuthor) : null;
 }
